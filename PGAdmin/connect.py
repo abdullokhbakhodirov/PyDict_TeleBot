@@ -49,7 +49,7 @@ def checking_user(id: int):
         return True
 
 
-def getting_data(id: int):
+def getting_language(id: int):
     connection = psycopg2.connect(
         user="postgres",
         password="1",
