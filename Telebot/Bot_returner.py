@@ -4,12 +4,10 @@ import logging
 import translators as ts
 from telebot.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, \
     InlineKeyboardButton
-
 from MP3_downloader_saver import main
-from MP3_downloader_saver.Downloader_saver.mp3_downloader import DIR_PATH
 from PGAdmin import checking_user
 from PGAdmin.connect import getting_language, load_data
-from Telebot.Bot_functions import ikm_language, get_name, get_doc_name_and_create_doc, ikm_todo, ecs, send
+from Telebot.Bot_functions import ikm_language, get_name, get_doc_name_and_create_doc, ikm_todo, send
 from Telebot.Bot_texts import token, language, com
 from Telebot.Bot_utils import returner_, check_word_spelling, get_dict
 
@@ -24,7 +22,7 @@ lang = ''
 def running(w):
     if not main(w):
         tts = gTTS(text=w, lang='en-gb')
-        tts.save(f"{DIR_PATH}{w}.mp3")
+        tts.save('C:/Users/abdul/PycharmProjects/PyDict_TeleBot/MP3_downloader_saver/'+w+'.mp3')
         return 'Added'
     else:
         return True
@@ -82,7 +80,7 @@ def creating_doc(message):
     if check:
         datum = getting_language(message.chat.id)
         global lang
-        if len(lang) == 0:
+        if len(lang) != 0:
             lang = datum
             bot.send_message(chat_id=message.chat.id,
                              text=ts.google(query_text="Yaratmoqchi bo'lgan documentga nom bering",
@@ -94,16 +92,49 @@ def creating_doc(message):
                              reply_markup=ikm_language())
 
 
+def ecs(message):
+    if message.text == 'Yes':
+        bot.send_message(chat_id=message.chat.id,
+                         text=ts.google(query_text="So'zning lug'atini chiqazib berish toxtatildi",
+                                        to_language=lang),
+                         reply_markup=ReplyKeyboardRemove()
+                         )
+        bot.send_message(chat_id=message.chat.id,
+                         text=com(lang))
+    else:
+        bot.send_message(chat_id=message.chat.id,
+                         text=ts.google(query_text="Iltimos so'zni qaytatdan kiriting",
+                                        to_language=lang),
+                         reply_markup=ReplyKeyboardRemove()
+                         )
+        bot.register_next_step_handler(message, dictio)
+
+
 def dictio(message):
     spell = check_word_spelling(message.text)
     global word
     word = message.text
-    if spell:
+    if spell is True:
         text = get_dict(message, lang)
         bot.send_message(chat_id=message.chat.id,
                          text=text,
                          parse_mode='Markdown',
                          reply_markup=ikm_todo(lang))
+    elif len(spell) != 0 and type(spell) is str:
+        text1 = f"*{message.text}* so'ziga o'xshash so'z: "
+        bot.send_message(chat_id=message.chat.id,
+                         text=ts.google(query_text="Siz so'zni noto'g'ri kiritdingiz",
+                                        to_language=lang)
+                         )
+        bot.send_message(chat_id=message.chat.id,
+                         text=ts.google(query_text=text1,
+                                        to_language=lang) + f' *{spell}*',
+                         parse_mode='Markdown'
+                         )
+        bot.send_message(chat_id=message.chat.id,
+                         text=ts.google(query_text="So'zni qaytadan kiriting yoki /esc kommandasini yuboring",
+                                        to_language=lang))
+        bot.register_next_step_handler(message, dictio)
     elif not spell:
         rkm = ReplyKeyboardMarkup(resize_keyboard=True)
         rkm.add(
@@ -116,7 +147,7 @@ def dictio(message):
                          reply_markup=rkm
                          )
         bot.register_next_step_handler(message, ecs)
-    elif spell == 'command':
+    elif spell == 'True_command_True':
         bot.send_message(chat_id=message.chat.id,
                          text=ts.google(
                              query_text="Iltimos boshqa commandalardan foydalanishdan oldin /ecs commandasini yuboring!",

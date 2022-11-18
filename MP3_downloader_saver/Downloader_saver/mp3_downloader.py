@@ -6,8 +6,9 @@ from threading import Thread
 import requests
 
 MP3_FILENAME_EXTENSION = '.mp3'
-DIR_PATH = '../../MP3_downloader_saver/download/'
-DATA_FILE = 'C:/Users/abdul/PycharmProjects/Dictionary/MP3_downloader_saver/data.json'
+DIR_PATH = '../../MP3_downloader_saver/'
+DATA_FILE = 'C:/Users/abdul/PycharmProjects/PyDict_TeleBot/MP3_downloader_saver/'
+list_f = ['data1.json', 'data2.json', 'data3.json', 'data4.json', 'data5.json']
 
 
 def download_mp3(word, url, dir_path):
@@ -75,20 +76,20 @@ class Statistics:
 def main(word):
     if not os.path.exists(DIR_PATH):
         os.makedirs(DIR_PATH)
-
-    with open(DATA_FILE, 'r') as file:
-        data = json.loads(file.read())
-    statistics = Statistics(len(data))
-    data_segments = word
-    for j in data:
-        if j == data_segments:
-            worker = DownloadWorker(1, [data_segments, data[j]], DIR_PATH, statistics)
-            worker.start()
-            if not worker:
-                return False
+    for d in list_f:
+        with open(DATA_FILE+d, 'r') as file:
+            data = json.loads(file.read())
+        statistics = Statistics(len(data))
+        data_segments = word
+        for j in data:
+            if j == data_segments:
+                worker = DownloadWorker(1, [data_segments, data[j]], DIR_PATH, statistics)
+                worker.start()
+                if not worker:
+                    return False
 
 
 def delete(word):
-    location = "C:/Users/abdul/PycharmProjects/Dictionary/Telegram_bot/download/"
+    location = "C:/Users/abdul/PycharmProjects/PyDict_TeleBot/MP3_downloader_saver/"
     path = os.path.join(location, word)
     os.remove(path)

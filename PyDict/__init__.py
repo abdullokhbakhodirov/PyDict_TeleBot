@@ -1,1 +1,1 @@
-from PyDict.PyDictionary import *
+from PyDict.PyDictionary2 import Pydict

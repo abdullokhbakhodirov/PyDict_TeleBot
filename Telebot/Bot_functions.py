@@ -2,7 +2,6 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeybo
     ReplyKeyboardRemove
 import translators as ts
 from MP3_downloader_saver import delete
-from Telebot.Bot_returner import dicti
 from Telebot.Bot_texts import asking_phone, com
 
 
@@ -51,26 +50,8 @@ def get_doc_name_and_create_doc(message, data_dict, logger, bot, lang):
                                     to_language=lang))
 
 
-def ecs(message, lang, bot):
-    if message.text == 'Yes':
-        bot.send_message(chat_id=message.chat.id,
-                         text=ts.google(query_text="So'zning lug'atini chiqazib berish toxtatildi",
-                                        to_language=lang),
-                         reply_markup=ReplyKeyboardRemove()
-                         )
-        bot.send_message(chat_id=message.chat.id,
-                         text=com(lang))
-    else:
-        bot.send_message(chat_id=message.chat.id,
-                         text=ts.google(query_text="Iltimos so'zni qaytatdan kiriting",
-                                        to_language=lang),
-                         reply_markup=ReplyKeyboardRemove()
-                         )
-        bot.register_next_step_handler(message, dicti)
-
-
 def send(message, bot, worde):
     bot.send_audio(chat_id=message.chat.id,
-                   audio=open(f'C:/Users/abdul/PycharmProjects/Dictionary/MP3_downloader_saver/download/{worde}.mp3',
+                   audio=open(f'C:/Users/abdul/PycharmProjects/PyDict_TeleBot/MP3_downloader_saver/{worde}.mp3',
                               'rb'))
     delete(f'{worde}.mp3')

@@ -1,7 +1,7 @@
 from textblob import Word
 from PGAdmin import checking_user
 from PGAdmin.connect import getting_language
-from PyDict.PyDictionary import Pydict
+from PyDict import Pydict
 
 
 def check_word_spelling(word):
@@ -16,7 +16,7 @@ def check_word_spelling(word):
     elif word == '/esc':
         return False
     else:
-        return 'command'
+        return 'True_command_True'
 
 
 def get_dict(message, language):
