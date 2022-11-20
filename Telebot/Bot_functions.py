@@ -2,7 +2,7 @@ import translators
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 import translators as ts
 from MP3_downloader_saver import delete
-from PyDocX import create, delete1
+from PyDocX import create
 from Telebot.Bot_texts import asking_phone
 
 
@@ -76,12 +76,10 @@ def send(message, bot, worde):
 def finish(message, bot, docx, lang, word):
     try:
         create(docx, word)
+        txt = translators.google(query_text="Successfully added. Send this command to get your dicts: ",
+                                 to_language=lang) + '/getdoc'
         bot.send_message(chat_id=message.chat.id,
-                         text=translators.google(query_text="Successfully added", to_language=lang))
-        bot.send_document(chat_id=message.chat.id,
-                          document=open(f'C:/Users/abdul/PycharmProjects/PyDict_TeleBot/Telebot/{docx}.docx',
-                                        'rb'))
-        delete1(f'{docx}.docx')
+                         text=txt)
         return True
     except:
         return False

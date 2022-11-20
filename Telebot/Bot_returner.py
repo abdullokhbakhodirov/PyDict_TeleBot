@@ -6,6 +6,7 @@ from telebot.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButt
 from MP3_downloader_saver import scrape
 from PGAdmin import checking_user
 from PGAdmin.connect import getting_language, load_data
+from PyDocX import delete1
 from Telebot.Bot_functions import ikm_language, get_name, get_doc_name_and_create_doc, ikm_todo, send, ikm_save, finish
 from Telebot.Bot_texts import token, language, com
 from Telebot.Bot_utils import returner_, check_word_spelling, get_dict
@@ -282,6 +283,19 @@ def get_some(call):
                              text=txt)
         else:
             finish(call.message, bot, data_dict['docx_name'], lang, word_l)
+
+
+@bot.message_handler(['get_doc'])
+def get_doc(message):
+    if "docx_name" in list(data_dict.keys()):
+        bot.send_document(chat_id=message.chat.id,
+                          document=open(f'C:/Users/abdul/PycharmProjects/PyDict_TeleBot/Telebot/{data_dict["docx_name"]}.docx',
+                                    'rb'))
+        delete1(f'{data_dict["docx_name"]}.docx')
+    else:
+        txt = ts.google(query_text="Sizda hali yaratilgan document yo'q", to_language=lang)
+        bot.send_message(chat_id=message.chat.id,
+                         text=txt)
 
 
 bot.polling()
