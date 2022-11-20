@@ -1,4 +1,2 @@
-try:
-    from PyDocX import *
-except:
-    from .creating_docx import *
+from PyDocX.creating_docx import create
+from PyDocX.creating_docx import delete1

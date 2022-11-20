@@ -1,8 +1,9 @@
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, \
-    ReplyKeyboardRemove
+import translators
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 import translators as ts
 from MP3_downloader_saver import delete
-from Telebot.Bot_texts import asking_phone, com
+from PyDocX import create, delete1
+from Telebot.Bot_texts import asking_phone
 
 
 def ikm_language():
@@ -27,6 +28,17 @@ def ikm_todo(lang):
     return ikm
 
 
+def ikm_save(list_: list):
+    ikm = InlineKeyboardMarkup()
+    ikm.add(
+        InlineKeyboardButton(text="Definition❌" if list_[0] is False else "Definition✅", callback_data='definition'),
+        InlineKeyboardButton(text="Translation❌" if list_[1] is False else "Translation✅", callback_data='translation'))
+    ikm.add(InlineKeyboardButton(text="Synonym❌" if list_[2] is False else "Synonym✅", callback_data='synonym'),
+            InlineKeyboardButton(text="Antonym❌" if list_[3] is False else "Antonym✅", callback_data='antonym'))
+    ikm.add(InlineKeyboardButton(text="Finish", callback_data='finish'))
+    return ikm
+
+
 def get_name(message, dictionary, bot, logger):
     name = message.text
     dictionary['Full name'] = name
@@ -45,9 +57,13 @@ def get_doc_name_and_create_doc(message, data_dict, logger, bot, lang):
     bot.send_message(chat_id=message.chat.id,
                      text=ts.google(query_text='Document muvaffaqiyatli yaratildi',
                                     to_language=lang))
+    txt1 = ts.google(query_text="Documentga so'z qo'shishni boshlash uchun ",
+                     to_language=lang)
+    txt2 = ts.google(query_text=" kommandasini yuboring",
+                     to_language=lang)
+    txt = txt1 + ' /dict ' + txt2
     bot.send_message(chat_id=message.chat.id,
-                     text=ts.google(query_text="Documentga so'z qo'shishni boshlash uchun /dict kommandasini yuboring",
-                                    to_language=lang))
+                     text=txt)
 
 
 def send(message, bot, worde):
@@ -55,3 +71,17 @@ def send(message, bot, worde):
                    audio=open(f'C:/Users/abdul/PycharmProjects/PyDict_TeleBot/MP3_downloader_saver/{worde}.mp3',
                               'rb'))
     delete(f'{worde}.mp3')
+
+
+def finish(message, bot, docx, lang, word):
+    try:
+        create(docx, word)
+        bot.send_message(chat_id=message.chat.id,
+                         text=translators.google(query_text="Successfully added", to_language=lang))
+        bot.send_document(chat_id=message.chat.id,
+                          document=open(f'C:/Users/abdul/PycharmProjects/PyDict_TeleBot/Telebot/{docx}.docx',
+                                        'rb'))
+        delete1(f'{docx}.docx')
+        return True
+    except:
+        return False

@@ -4,8 +4,8 @@ from PGAdmin.connect import getting_language
 from PyDict import Pydict
 
 
-def check_word_spelling(word):
-    if word[0] != '/':
+def check_word_spelling(word: str):
+    if not word.startswith('/'):
         word = Word(word)
         result = word.spellcheck()
 
@@ -13,7 +13,7 @@ def check_word_spelling(word):
             return True
         else:
             return result[0][0]
-    elif word == '/esc':
+    elif word == '/ecs':
         return False
     else:
         return 'True_command_True'

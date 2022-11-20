@@ -1,3 +1,4 @@
+import os
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
@@ -31,3 +32,9 @@ def create(name_of_file: str, words: dict):
         nums += 1
 
     document.save(f'{name_of_file}.docx')
+
+
+def delete1(word):
+    location = "C:/Users/abdul/PycharmProjects/PyDict_TeleBot/Telebot/"
+    path = os.path.join(location, word)
+    os.remove(path)
